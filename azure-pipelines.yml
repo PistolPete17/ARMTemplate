@@ -19,7 +19,7 @@ steps:
     resourceGroupName: 'vimallabs'
     location: 'East US'
     templateLocation: 'URL of the file'
-    csmFileLink: 'https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/get-started-deployment/linked-template/azuredeploy.json'
+    csmFileLink: 'https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azure-pipelines-2.yml'
     overrideParameters: '-projectName ARMTestEnvironment'
     deploymentMode: 'Incremental'
     deploymentName: 'DeployPipelineTemplate'
