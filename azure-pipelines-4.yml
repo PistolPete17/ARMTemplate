@@ -15,12 +15,9 @@ steps:
     azureSubscription: 'ARMTemplateServiceConnection'
     ScriptType: 'InlineScript'
     Inline: |
-      $storageaccountname = new-object psobject                                           
-            $storageaccountname |add-member -Name 'type' -Value 'string' -membertype noteproperty 
-            $storageaccountname |add-member -Name 'value' -Value '${env:ACCOUNT_NAME}' -membertype noteproperty
-            $parameters = (invoke-webrequest https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy.parameters.json).Content | convertfrom-json
-            $parameters.parameters | add-member -membertype noteproperty -name 'storageaccountname' -value $storageaccountname
-            $parameters | ConvertTo-Json > parameters_updated.json
-            new-azresourcegroupdeployment -resourcegroupname policytesting -templateURI https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy2.json-templateparameterfile 'parameters_updated.json'
+      $parameters = (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.parameters.json).Content | convertfrom-json
+      $params = @{storageAccountName='${env:ACCOUNT_NAME}'}
+      $parameters.parameters|foreach-object{ $params[$_.Name]=$_.Value}
+      new-azresourcegroupdeployment -resourcegroupname policytesting -templateURI https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json -templateparameterobject $params
     azurePowerShellVersion: 'LatestVersion'
 
