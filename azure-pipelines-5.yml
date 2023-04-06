@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: AzurePowerShell@5
+  inputs:
+    azureSubscription: 'ARMTemplateServiceConnection'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $storageaccountname = new-object psobject                                           
+      $storageaccountname |add-member -Name 'type' -Value 'string' -membertype noteproperty 
+      $storageaccountname |add-member -Name 'value' -Value '${env:ACCOUNT_NAME}' -membertype noteproperty
+      $parameters = (invoke-webrequest https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy.parameters.json).Content | convertfrom-json
+      $parameters.parameters | add-member -membertype noteproperty -name 'storageaccountname' -value $storageaccountname
+      $parameters | ConvertTo-Json > parameters_updated.json
+      new-azresourcegroupdeployment -resourcegroupname policytesting -templateURI https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy2.json-templateparameterfile 'parameters_updated.json'
+    azurePowerShellVersion: 'LatestVersion'
