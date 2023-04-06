@@ -17,6 +17,7 @@ steps:
     Inline: |
       $parameters = (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.parameters.json).Content | convertfrom-json
       $params = @{storageAccountName="2017258PC"}
+      write-output (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json).Content
       new-azresourcegroupdeployment -resourcegroupname vimallabs -templateURI https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json -templateparameterobject $params
     azurePowerShellVersion: 'LatestVersion'
 
