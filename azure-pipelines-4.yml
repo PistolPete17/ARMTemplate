@@ -17,7 +17,6 @@ steps:
     Inline: |
       $parameters = (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.parameters.json).Content | convertfrom-json
       $params = @{storageAccountName='${env:ACCOUNT_NAME}'}
-      $parameters.parameters|foreach-object{ $params[$_.Name]=$_.Value}
       new-azresourcegroupdeployment -resourcegroupname policytesting -templateURI https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json -templateparameterobject $params
     azurePowerShellVersion: 'LatestVersion'
 
