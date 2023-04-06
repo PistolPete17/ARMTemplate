@@ -10,17 +10,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: AzureResourceManagerTemplateDeployment@3
+- task: AzurePowerShell@5
   inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'ARMTemplateServiceConnection'
-    subscriptionId: '5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'vimallabs'
-    location: 'East US'
-    templateLocation: 'URL of the file'
-    csmFileLink: 'https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azure-pipelines-2.yml'
-    csmParametersFileLink: 'https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy.parameters.json'
-    deploymentMode: 'Incremental'
-    deploymentName: 'DeployPipelineARMTemplate'
-    addSpnToEnvironment: true
+    azureSubscription: 'ARMTemplateServiceConnection'
+    ScriptType: 'InlineScript'
+    Inline: |
+      $storageaccountname = new-object psobject                                           
+      $storageaccountname |add-member -Name 'type' -Value 'string' -membertype noteproperty 
+      $storageaccountname |add-member -Name 'value' -Value '2wsx3edc' -membertype noteproperty
+      $parameters = (invoke-webrequest https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy.parameters.json).Content | convertfrom-json
+      $parameters.parameters | add-member -membertype noteproperty -name 'storageaccountname' -value $storageaccountname
+      $parameters | ConvertTo-Json > parameters_updated.json
+      new-azresourcegroupdeployment -resourcegroupname policytesting -templateURI https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy2.json-templateparameterfile 'parameters_updated.json'
+    azurePowerShellVersion: 'LatestVersion'
