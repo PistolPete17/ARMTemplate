@@ -17,7 +17,7 @@ steps:
     Inline: |
       $storageaccountname = new-object psobject                                           
       $storageaccountname |add-member -Name 'type' -Value 'string' -membertype noteproperty 
-      $storageaccountname |add-member -Name 'value' -Value '2wsx3edc' -membertype noteproperty
+      $storageaccountname |add-member -Name 'value' -Value '${env:ACCOUNT_NAME}' -membertype noteproperty
       $parameters = (invoke-webrequest https://raw.githubusercontent.com/PistolPete17/ARMTemplate/main/azuredeploy.parameters.json).Content | convertfrom-json
       $parameters.parameters | add-member -membertype noteproperty -name 'storageaccountname' -value $storageaccountname
       $parameters | ConvertTo-Json > parameters_updated.json
