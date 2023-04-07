@@ -15,7 +15,7 @@ steps:
   inputs:
     azureSubscription: 'ARMTemplateServiceConnection'
     ScriptType: 'InlineScript'
-    Inline: 'Connect-AzAccount -Environment PCheneler Internal Consumption -Tenant 72f988bf-86f1-41af-91ab-2d7cd011db47'
+    Inline: 'Connect-AzAccount - Environment AzureCloud -Tenant 72f988bf-86f1-41af-91ab-2d7cd011db47 -Subscription 5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
     azurePowerShellVersion: 'LatestVersion'
 - task: AzurePowerShell@5
   inputs:
