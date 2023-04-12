@@ -13,11 +13,11 @@ pool:
   #name: Organization Pool
   #demands: agent.name -equals WindowsSelfHosted
 
-variables:
-  servicePrincipalId: '13bfa0a1-1d4d-4609-9927-69329cf0187e'
-  servicePrincipalKey: 'X5v8Q~dYJanmnOvByYtbGY7~TNAqUkx.L4-MFb0r'
-  tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
-  subscriptionId: '5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
+#variables:
+  #servicePrincipalId: '13bfa0a1-1d4d-4609-9927-69329cf0187e'
+  #servicePrincipalKey: 'X5v8Q~dYJanmnOvByYtbGY7~TNAqUkx.L4-MFb0r'
+  #tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+  #subscriptionId: '5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
 
 steps:
 - task: PowerShell@2
@@ -25,10 +25,10 @@ steps:
     targetType: 'inline'
     script: |
       Install-Module -Name Az -AllowClobber -Scope CurrentUser -Force
-      $servicePrincipalId = $(servicePrincipalId)
-      $servicePrincipalKey = $(servicePrincipalKey)
-      $tenantId = $(tenantId)
-      $subscriptionId = $(subscriptionId)
+      $servicePrincipalId = '13bfa0a1-1d4d-4609-9927-69329cf0187e'
+      $servicePrincipalKey = 'X5v8Q~dYJanmnOvByYtbGY7~TNAqUkx.L4-MFb0r'
+      $tenantId = '72f988bf-86f1-41af-91ab-2d7cd011db47'
+      $subscriptionId = '5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
 
       $securePassword = ConvertTo-SecureString $servicePrincipalKey -AsPlainText -Force
       $credential = New-Object System.Management.Automation.PSCredential($servicePrincipalId, $securePassword)
