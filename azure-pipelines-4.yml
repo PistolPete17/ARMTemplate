@@ -13,18 +13,30 @@ pool:
   #name: Organization Pool
   #demands: agent.name -equals WindowsSelfHosted
 
+variables:
+  servicePrincipalId: '70345e56-e781-45db-83d7-3e155674d831'
+  servicePrincipalKey: 'X5v8Q~dYJanmnOvByYtbGY7~TNAqUkx.L4-MFb0r'
+  tenantId: '72f988bf-86f1-41af-91ab-2d7cd011db47'
+  subscriptionId: '5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
+
 steps:
 - task: PowerShell@2
   inputs:
-    TargetType: 'Inline'
-    Script: |
+    targetType: 'inline'
+    script: |
       Install-Module -Name Az -AllowClobber -Scope CurrentUser -Force
-      Connect-AzAccount -Environment AzureCloud -Tenant 72f988bf-86f1-41af-91ab-2d7cd011db47 -Subscription 5ba73d84-ad8e-442c-bf7c-f4642263a3e1
-      $out=(Get-Module az.resources)
-      Write-output $out
+      $servicePrincipalId = $(servicePrincipalId)
+      $servicePrincipalKey = $(servicePrincipalKey)
+      $tenantId = $(tenantId)
+      $subscriptionId = $(subscriptionId)
+
+      $securePassword = ConvertTo-SecureString $servicePrincipalKey -AsPlainText -Force
+      $credential = New-Object System.Management.Automation.PSCredential($servicePrincipalId, $securePassword)
+
+      Connect-AzAccount -ServicePrincipal -Credential $credential -TenantId $tenantId
+
       $parameters = (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.parameters.json).Content | convertfrom-json
       $params = @{storageAccountName="2017258pc"}
       write-output (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json).Content
       new-azresourcegroupdeployment -resourcegroupname vimallabs -templateURI https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json -templateparameterobject $params
 
-   
