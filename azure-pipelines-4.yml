@@ -19,7 +19,6 @@ steps:
     TargetType: 'Inline'
     Script: |
       'Connect-AzAccount - Environment AzureCloud -Tenant 72f988bf-86f1-41af-91ab-2d7cd011db47 -Subscription 5ba73d84-ad8e-442c-bf7c-f4642263a3e1'
-      Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
       $out=(Get-Module az.resources)
       Write-output $out
       $parameters = (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.parameters.json).Content | convertfrom-json
