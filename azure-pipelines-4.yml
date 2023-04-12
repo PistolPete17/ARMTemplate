@@ -7,13 +7,15 @@ trigger:
 - main
 
 pool:
-  name: Organization Pool
-  demands: agent.name -equals WindowsSelfHosted
+  vmImage: ubuntu-latest
+
+#pool:
+  #name: Organization Pool
+  #demands: agent.name -equals WindowsSelfHosted
 
 steps:
 - task: AzurePowerShell@5
   inputs:
-    pwsh: true 
     azureSubscription: 'ARMTemplateServiceConnection' 
     ScriptType: 'InlineScript'
     Inline: |
@@ -25,5 +27,6 @@ steps:
       $params = @{storageAccountName="2017258pc"}
       write-output (invoke-webrequest https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json).Content
       new-azresourcegroupdeployment -resourcegroupname vimallabs -templateURI https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/quickstarts/microsoft.storage/storage-account-create/azuredeploy.json -templateparameterobject $params
-    azurePowerShellVersion: 'LatestVersion'
+    azurePowerShellVersion: "OtherVersion"
+    preferredAzurePowerShellVersion: 2.6.0
    
